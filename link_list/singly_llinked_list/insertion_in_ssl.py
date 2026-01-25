@@ -252,16 +252,330 @@ class Linkedlist:
             # This follows the links between nodes
             # Time: O(1), Space: O(1)
 
-    def search(self,value):
-        current = self.head
-        index = 0
-        while current is not None: #this same as while current is not none 
-            
+    def search(self, value):
+    # search() finds the position (index) of a given value in the linked list
+    # It returns:
+    #   index (0-based) → if value is found
+    #   -1             → if value is not present in the list
+
+        current = self.head  
+        # Start searching from the first node (head)
+        # current holds reference to the current node
+        # Time: O(1), Space: O(1)
+
+        index = 0  
+        # Index counter to track the position of current node
+        # First node has index 0
+        # Time: O(1), Space: O(1)
+
+        while current is not None:
+            # Traverse through each node until the end of the list
+            # Loop runs once for each node
+            # Time: O(n), Space: O(1)
+
             if current.value == value:
-                return index
-            current = current.next
-            index+=1
-        return -1
+                # Compare the value stored in current node
+                # with the value we are searching for
+                # If equal, value is found at this index
+                # Time: O(1), Space: O(1)
+
+                return index  
+                # Stop searching and return the position of the value
+                # This tells the caller EXACTLY where the value is located
+                # Time: O(1), Space: O(1)
+
+            current = current.next  
+            # Move to the next node using the next reference
+            # Time: O(1), Space: O(1)
+
+            index += 1  
+            # Move to the next index position
+            # Time: O(1), Space: O(1)
+
+        # If loop finishes, value was not found in any node
+        return -1  
+        # Returning -1 indicates that the value does NOT exist in the list
+        # This is a standard convention in searching algorithms
+        # Time: O(1), Space: O(1)
+
+    def get(self, index):
+    # get() returns the node present at a given index in the linked list
+    # It returns:
+    #   Node object → if index is valid
+    #   None        → if index is invalid
+
+        if index == -1:
+            # Special case: if index is -1
+            # We treat this as a shortcut to get the last node
+            # Instead of traversing, we directly return tail
+            # Time: O(1), Space: O(1)
+
+            return self.tail
+
+        if index < 0 or index > self.length:
+            # If index is invalid (negative or greater than list length)
+            # We cannot access a node at this position
+            # Time: O(1), Space: O(1)
+
+            return None
+
+        temp_node = self.head  
+        # Start traversal from the first node (head)
+        # temp_node holds reference to the current node
+        # Time: O(1), Space: O(1)
+
+        for _ in range(index):
+            # Move forward 'index' times to reach the desired node
+            # Loop runs index times
+            # Time: O(n), Space: O(1)
+
+            temp_node = temp_node.next  
+            # Move to the next node using next reference
+            # Time: O(1), Space: O(1)
+
+        return temp_node  
+        # Return the node found at the given index
+        # This allows the caller to access its value or next pointer
+        # Time: O(1), Space: O(1)
+
+    
+    
+    def set_value(self,index,value):  
+        # temp_node = self.head
+        # for _ in range(index):
+
+        #     temp_node = temp_node.next 
+        
+        # temp_node.value = value
+        
+        # return None
+ 
+        # set_value() updates the value of the node at a given index
+        # It returns:
+        #   True  → if update is successful
+        #   False → if index is invalid (node not found)
+
+        temp_node = self.get(index)  
+        # Use the existing get() method to find the node at given index
+        # This avoids rewriting traversal logic (code reuse)
+        # Time: O(n), Space: O(1)
+        # Note: get(index) itself may be O(1) or O(n) depending on index
+
+        if temp_node:
+            # If a valid node is returned (not None)
+            # This means index is within range and node exists
+            # Time: O(1), Space: O(1)
+
+            temp_node.value = value  
+            # Update the value stored in the node
+            # This changes data but NOT the structure of the linked list
+            # Time: O(1), Space: O(1)
+
+            return True  
+            # Return True to indicate update was successful
+            # This tells the caller the operation SUCCEEDED
+            # Time: O(1), Space: O(1)
+
+        else:
+            # If temp_node is None
+            # This means get(index) failed → invalid index
+            # Time: O(1), Space: O(1)
+
+            return False  
+            # Return False to indicate update FAILED
+            # This tells the caller the operation did NOT succeed
+            # Time: O(1), Space: O(1)
+
+    def pop_first(self):
+        # pop_first() removes and returns the first node of the linked list
+        # It returns:
+        #   removed node → if deletion is successful
+        #   None         → if the list is empty
+
+        temp_node = self.head  
+        # Store current head node (may be None if list is empty)
+        # Time: O(1), Space: O(1)
+
+        if self.length == 0:
+            # Edge case 1: If linked list is empty
+            # Nothing to remove
+            # Time: O(1), Space: O(1)
+
+            return None
+
+        if self.length == 1:
+            # Edge case 2: If linked list has only one node
+            # After removal, list should become empty
+            # Time: O(1), Space: O(1)
+
+            self.head = None  
+            # Remove head reference
+            # Time: O(1), Space: O(1)
+
+            self.tail = None  
+            # Remove tail reference (same as head in single-node list)
+            # Time: O(1), Space: O(1)
+
+        else:
+            # Case 3: If linked list has more than one node
+            # Time: O(1), Space: O(1)
+
+            temp_node = self.head  
+            # Store current head node so we can return it later
+            # Time: O(1), Space: O(1)
+
+            self.head = self.head.next  
+            # Move head to the second node
+            # This removes the first node from the list
+            # Time: O(1), Space: O(1)
+
+            temp_node.next = None  
+            # Disconnect removed node from the list
+            # Prevents accidental memory access
+            # Time: O(1), Space: O(1)
+
+        self.length -= 1  
+        # Decrease size of linked list because one node is removed
+        # Time: O(1), Space: O(1)
+
+        return temp_node  
+        # Return removed node to caller
+        # Caller can access removed value if needed
+        # Time: O(1), Space: O(1)
+
+
+    def pop(self):
+        # pop() removes and returns the last node of the linked list
+        # It returns:
+        #   removed node → if deletion is successful
+        #   None         → if the list is empty
+
+        pop_value = self.tail  
+        # Store current tail node (the one we will remove)
+        # This allows us to return it later
+        # Time: O(1), Space: O(1)
+
+        if self.length == 0:
+            # Edge case 1: If linked list is empty
+            # Nothing to remove
+            # Time: O(1), Space: O(1)
+
+            return None
+
+        if self.length == 1:
+            # Edge case 2: If linked list has only one node
+            # After removal, list should become empty
+            # Time: O(1), Space: O(1)
+
+            self.head = None  
+            # Remove head reference
+            # Time: O(1), Space: O(1)
+
+            self.tail = None  
+            # Remove tail reference (same as head in single-node list)
+            # Time: O(1), Space: O(1)
+
+        else:
+            # Case 3: If linked list has more than one node
+            # We must find the SECOND-LAST node
+            # Time: O(1), Space: O(1) for setup
+
+            temp_node = self.head  
+            # Start traversal from head to reach second-last node
+            # Time: O(1), Space: O(1)
+
+            while temp_node.next is not self.tail:
+                # Move forward until we reach the node just before tail
+                # Loop runs (n-1) times in worst case
+                # Time: O(n), Space: O(1)
+
+                temp_node = temp_node.next  
+                # Move to next node using next reference
+                # Time: O(1), Space: O(1)
+
+            self.tail = temp_node  
+            # Update tail to the second-last node
+            # This removes the last node from the list
+            # Time: O(1), Space: O(1)
+
+            temp_node.next = None  
+            # Disconnect the old tail node
+            # Prevents accidental memory access
+            # Time: O(1), Space: O(1)
+
+        self.length -= 1  
+        # Decrease size of linked list because one node is removed
+        # Time: O(1), Space: O(1)
+
+        return pop_value  
+        # Return removed node to caller
+        # Caller can access removed value if needed
+        # Time: O(1), Space: O(1)
+
+
+
+def remove(self, index):
+    # remove() deletes the node at a given index in the linked list
+    # It returns:
+    #   removed node → if deletion is successful
+    #   None         → if index is invalid or list is empty
+
+    if index <-1 or index >= self.length:
+        # If index is invalid (negative or beyond last index)
+        # We cannot remove a node at this position
+        # return None means:
+        # - Stop function immediately
+        # - Tell caller that deletion FAILED
+        # Time: O(1), Space: O(1)
+
+        return None
+
+    if index == 0:
+        # Edge case 1: Removing the first node
+        # We reuse pop_first() to avoid rewriting logic
+        # Time: O(1), Space: O(1)
+
+        return self.pop_first()
+
+    if index == self.length - 1 or index == -1:
+        # Edge case 2: Removing the last node
+        # We reuse pop() to avoid rewriting logic
+        # Time: O(n), Space: O(1)
+
+        return self.pop()
+
+    # Case 3: Removing a node from the middle
+
+    previous_node = self.get(index - 1)  
+    # Get the node just BEFORE the one we want to remove
+    # Time: O(n), Space: O(1)
+
+    temp_node = previous_node.next  
+    # Store the node to be removed
+    # Time: O(1), Space: O(1)
+
+    previous_node.next = temp_node.next  
+    # Bypass the node to be removed
+    # This reconnects the list and removes temp_node from chain
+    # Time: O(1), Space: O(1)
+
+    temp_node.next = None  
+    # Disconnect removed node completely
+    # Prevents accidental memory access
+    # Time: O(1), Space: O(1)
+
+    self.length -= 1  
+    # Decrease size of linked list because one node is removed
+    # Time: O(1), Space: O(1)
+
+    return temp_node  
+    # Return removed node to caller
+    # Caller can access removed value if needed
+    # Time: O(1), Space: O(1)
+
+
+
+
 
     
 
@@ -270,11 +584,14 @@ new = Linkedlist()
 new.append(103)
 new.append(20)
 new.append(20)
-new.append(20)
+new.append(134)
+print(new)
+print(new.pop())
+print(new)
 # new.prepend(1)
 # print(new.insert(3,17))
 # print(new)
-print(new.search(19990))
+# print(new.search(19990))
 # Printing the value stored in the last node
 # print(new.tail.value)
 # in the end for whole the space and time complexity is O(1) and O(1)
