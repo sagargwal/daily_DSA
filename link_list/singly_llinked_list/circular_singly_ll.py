@@ -11,7 +11,8 @@ class Node:
         # Initialize next pointer as None
         # This will later point to another node
         # Time: O(1), Space: O(1)
-
+    def __str__(self):
+        return str(self.value)
 
 class CSLinked_List:
     def __init__(self):
@@ -190,26 +191,293 @@ class CSLinked_List:
         # Increase size of linked list because one node is added
         # Time: O(1), Space: O(1)
 
-    def insert(self,index,value):
+    def insert(self, index, value):
+        # insert() adds a new node at a given index in the circular linked list
+        # It returns:
+        #   True  → if insertion is successful
+        #   False → if index is invalid
+
+        if index < 0 or index > self.length:
+            # Invalid index
+            raise Exception("index out of range")
+
+        if index == 0:
+            # Insert at beginning
+            self.prepend(value)
+            return True
+
+        if index == self.length:
+            # Insert at end
+            self.append(value)
+            return True
+
+        # Insert in the middle
+
         new_node = Node(value)
         temp_node = self.head
+
+        for _ in range(index - 1):
+            # Traverse to node just before insertion point
+            temp_node = temp_node.next
+
+        new_node.next = temp_node.next
+        # New node points to next node in list
+
+        temp_node.next = new_node
+        # Previous node now points to new node
+
+        self.length += 1
+        # Update length
+
+        return True
+
+    def traversal(self):
+        # traversal() prints all values in the circular linked list
+        # Since the list is circular, we must stop when we reach head again
+
+        temp_node = self.head  
+        # Start traversal from the head node
+        # Time: O(1), Space: O(1)
+
+        while temp_node is not None:
+            # Loop runs until we manually break
+            # We cannot rely on None in circular lists
+            # Time: O(n), Space: O(1)
+
+            print(temp_node.value)  
+            # Print current node's value
+            # Time: O(1), Space: O(1)
+
+            temp_node = temp_node.next  
+            # Move to the next node
+            # Time: O(1), Space: O(1)
+
+            if temp_node == self.head:
+                # If we reached the head again
+                # It means one full cycle is completed
+                # Break to avoid infinite loop
+                # Time: O(1), Space: O(1)
+                break
+
+            
+    def search(self, value):
+        # search() checks whether a given value exists in the circular linked list
+        # It returns:
+        #   True  → if value is found
+        #   False → if value is not found
+
+        temp_node = self.head  
+        # Start searching from the head
+        # Time: O(1), Space: O(1)
+
+        while temp_node is not None:
+            # Loop runs until we manually break
+            # Time: O(n), Space: O(1)
+
+            if temp_node.value == value:
+                # If current node contains the searched value
+                # Time: O(1), Space: O(1)
+
+                return True  
+                # Value found, stop search and return True
+
+            temp_node = temp_node.next  
+            # Move to the next node
+            # Time: O(1), Space: O(1)
+
+            if temp_node == self.head:
+                # If we reached head again
+                # Full circle completed and value not found
+                break
+
+        return False  
+    
+    # Value does not exist in the list
+    def get(self, index):
+        # get() returns the node present at a given index
+        # It returns:
+        #   Node object → if index is valid
+        #   None        → if index is invalid
+        # Special case:
+        #   index = -1 returns the tail node
+
+        current = self.head  
+        # Start traversal from the head node
+        # Time: O(1), Space: O(1)
+
+        if index == -1:
+            # Special shortcut for last node
+            # We directly return tail instead of traversing
+            # Time: O(1), Space: O(1)
+
+            return self.tail
+
+        if index < -1 or index >= self.length:
+            # Invalid index:
+            #  - less than -1
+            #  - greater than or equal to length
+            # Time: O(1), Space: O(1)
+
+            return None
+
+        for _ in range(index):
+            # Move forward 'index' times to reach the desired node
+            # Loop runs index times
+            # Time: O(n), Space: O(1)
+
+            current = current.next  
+            # Move to the next node in the circular linked list
+            # Time: O(1), Space: O(1)
+
+        return current  
+        # Return the node at the requested index
+        # Time: O(1), Space: O(1)
+
+    def set(self,index, value):
+        target = self.get(index)
+        if target:
+            target.value = value
+            return True
+        return False
+
+    def pop_first(self):
+        # pop_first() removes and returns the head node
+        # Returns:
+        #   Node object → if list not empty
+        #   None        → if list empty
+
         if self.length == 0:
-            self.head = temp_node
-            self.tail = temp_node
-            new_node.next = new_node
+            # Empty list case
+            # Time: O(1), Space: O(1)
+            return None
+
+        pop_node = self.head
+        # Store current head to return later
+        # Time: O(1), Space: O(1)
+
+        if self.length == 1:
+            # Single node case → list becomes empty
+            # Time: O(1), Space: O(1)
+            self.head = None
+            self.tail = None
+        else:
+            # Move head forward
+            # Time: O(1), Space: O(1)
+            self.head = self.head.next
+
+            # Maintain circular property
+            # Time: O(1), Space: O(1)
+            self.tail.next = self.head
+
+            # Detach removed node
+            # Time: O(1), Space: O(1)
+            pop_node.next = None
+
+        self.length -= 1
+        # Update length
+        # Time: O(1), Space: O(1)
+
+        return pop_node
+        # Overall Time: O(1)
+        # Overall Space: O(1)
+
+    def pop(self):
+        # pop() removes and returns the last node (tail)
+        # Returns:
+        #   Node object → if list not empty
+        #   None        → if list empty
+
+        if self.length == 0:
+            # Empty list
+            # Time: O(1), Space: O(1)
+            return None
+
+        pop_node = self.tail
+        # Store current tail
+        # Time: O(1), Space: O(1)
+
+        if self.length == 1:
+            # Single node case → list becomes empty
+            # Time: O(1), Space: O(1)
+            self.head = None
+            self.tail = None
+        else:
+            # Traverse to node before tail
+            # Time: O(n), Space: O(1)
+            temp = self.head
+            while temp.next is not self.tail:
+                temp = temp.next
+
+            # Update tail and maintain circular link
+            # Time: O(1), Space: O(1)
+            self.tail = temp
+            self.tail.next = self.head
+
+            pop_node.next = None
+            # Detach removed node
+            # Time: O(1), Space: O(1)
+
+        self.length -= 1
+        # Update length
+        # Time: O(1), Space: O(1)
+
+        return pop_node
+        # Overall Time: O(n)
+        # Overall Space: O(1)
+
+    def remove(self, index):
+        # remove() removes node at given index
+        # Returns:
+        #   Node object → if index valid
+        #   None        → if index invalid
+
+        if index < 0 or index >= self.length:
+            # Invalid index
+            # Time: O(1), Space: O(1)
+            return None
+
         if index == 0:
-            self.prepend(value)
-        elif index == self.length:
-            self.append(value)
-        else:   
-            for _ in range(index-1):
-                temp_node = temp_node.next
-            new_node.next = temp_node.next
-            temp_node.next = new_node
-        self.length += 1 
+            # Remove first node
+            # Time: O(1), Space: O(1)
+            return self.pop_first()
+
+        if index == self.length - 1:
+            # Remove last node
+            # Time: O(n), Space: O(1)
+            return self.pop()
+
+        # Remove node from middle
+        # Time: O(n), Space: O(1)
+        temp = self.head
+        for _ in range(index - 1):
+            temp = temp.next
+
+        remove_node = temp.next
+        temp.next = remove_node.next
+        remove_node.next = None
+
+        self.length -= 1
+
+        return remove_node
+
+        # Overall Time: O(n)
+        # Overall Space: O(1)
+
+    def delete_all(self):
+        self.tail.next = None 
+        self.head = None
+        self.tail = None
+        self.length = 0 
+
+
+
+
 
 new = CSLinked_List()
-new.insert(0,78)
-# new.append(89)
-# new.prepend(6777)
+new.append(67)
+new.append(676)
+new.append(67788)
+new.append(6777)
+new.pop_first()
 print(new)
+print(new.tail)

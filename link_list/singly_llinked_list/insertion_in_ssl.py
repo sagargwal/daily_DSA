@@ -573,7 +573,10 @@ def remove(self, index):
     # Caller can access removed value if needed
     # Time: O(1), Space: O(1)
 
-
+def delete_all(self):
+    self.head = None
+    self.tail = None
+    self.length = 0 
 
 
 
