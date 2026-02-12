@@ -1,2 +1,3 @@
-for i in range(6,10):
-    print(i)
+a = ""
+b = "2"
+print(a+b)

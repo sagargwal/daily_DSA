@@ -235,16 +235,84 @@ class doubly_ll():
             # Time: O(1), Space: O(1)
 
     def pop_first(self):
+        # pop_first() removes the first node from a DOUBLY linked list
+        # It returns:
+        #   The removed node → if list is not empty
+        #   None → if list is empty
+
+        if self.head is None:
+            # Case 1: Empty list
+            # Nothing to remove
+            # Time: O(1), Space: O(1)
+            return None
+
+        temp_node = self.head
+        # Store current head (node to remove)
+        # Time: O(1), Space: O(1)
+
+        if self.length == 1:
+            # Case 2: Only one node in list
+            # After removal, list becomes empty
+            self.head = None
+            self.tail = None
+            # Time: O(1), Space: O(1)
+
+        else:
+            # Case 3: More than one node
+
+            self.head = temp_node.next
+            # Move head pointer to next node
+            # Time: O(1), Space: O(1)
+
+            self.head.prev = None
+            # Remove backward link to old head
+            # Time: O(1), Space: O(1)
+
+            temp_node.next = None
+            # Detach removed node completely
+            # Time: O(1), Space: O(1)
+
+        self.length -= 1
+        # Decrease list size
+        # Time: O(1), Space: O(1)
+
+        return temp_node
+        # Return removed node
+        # Time: O(1), Space: O(1)
+
+    # Overall:
+    # Time Complexity: O(1)
+    # Space Complexity: O(1)
+
+    def pop(self):
         if self.head is None:
             return None
+        poped_node = self.tail
+        if self.length == 1:
+            self.head = None
+            self.tail = None
         else:
-                
-            temp_node = self.head
-            self.head = temp_node.next
-            temp_node.next = None
-            self.head.perv = None
-            self.length -=  1
-            return True
+
+            self.tail = self.tail.prev
+            self.tail.next = None
+            poped_node.prev = None
+        self.length -= 1
+        return poped_node
+    
+    def remove(self,index):
+        current = self.head 
+        for _ in range(index-1):
+            current= current.next
+        forward = current.next.next
+        remove_node = current.next 
+        remove_node.next = None
+        remove_node.prev = None
+        current.next = forward
+        forward.prev = current
+        
+
+
+
 
         
 
@@ -256,10 +324,10 @@ class doubly_ll():
 
 new = doubly_ll()
 
-# new.append(10)
-# new.append(20)
-# new.append(30)
-# new.append(90) 
-new.pop_first()
-print(new)
-print(new.length)
+new.append(10)
+new.append(20)
+new.append(30)
+new.append(90) 
+# new.pop_fir
+new.remove(2)
+print(new.head)
